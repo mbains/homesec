@@ -1,0 +1,18 @@
+{
+  "name": "homesec",
+  "version": "0.0.1",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": { 
+    "serveup": "latest",
+    "hem": "latest",
+    "es5-shimify": "~0.0.1",
+    "json2ify": "~0.0.1",
+    "jqueryify": "~0.0.1",
+    "spine": "latest",
+    "iced-coffee-script": "latest",
+    "socket.io": "latest",
+    "express": "latest"    
+  }
+}
