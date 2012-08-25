@@ -10,9 +10,8 @@
 
     __extends(ScopedRouter, _super);
 
-    function ScopedRouter(app) {
-      this.app = app;
-      ScopedRouter.__super__.constructor.apply(this, arguments);
+    function ScopedRouter() {
+      return ScopedRouter.__super__.constructor.apply(this, arguments);
     }
 
     ScopedRouter.prototype.bindroute = function(path, method, handler) {

@@ -1,5 +1,8 @@
 
 class Observable
+  constructor: (config)->
+    @[key]=value for own key, value of config
+    
   connect:(onObj, signal, fn)->
     extraArgs = [].splice.call arguments,3
     onObj.on signal, ()=>
