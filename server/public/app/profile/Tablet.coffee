@@ -7,7 +7,7 @@ Ext.define "HomeSec.profile.Tablet",
   launch: ->
     Ext.create "HomeSec.view.tablet.MainView"
     console.log "Tablet Profile Launch"
-    @callParent()
+    @callParent(arguments)
     
   isActive: ->
     true

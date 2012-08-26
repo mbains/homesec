@@ -4,6 +4,6 @@ Ext.application({
   name: "HomeSec",
   profiles: ["Tablet"],
   launch: function() {
-    return console.log("launch");
+    return console.log("APP launch");
   }
 });

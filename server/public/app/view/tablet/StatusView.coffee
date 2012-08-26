@@ -4,7 +4,7 @@ Ext.define "HomeSec.view.tablet.StatusView",
   xtype: 'statusview'
   config:
    store: Ext.create 'HomeSec.store.SStatus'
-   itemTpl: '<div class="myitem">{nameText} has tripped {tripValue} times <br/></div>'
+   itemTpl: '<div class="myitem">{nameText} has tripped {tripValue} times </div>'
   constructor: ()->
     console.log "Loaded StatusView"
     @callParent(arguments)

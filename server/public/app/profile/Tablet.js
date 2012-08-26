@@ -9,7 +9,7 @@ Ext.define("HomeSec.profile.Tablet", {
   launch: function() {
     Ext.create("HomeSec.view.tablet.MainView");
     console.log("Tablet Profile Launch");
-    return this.callParent();
+    return this.callParent(arguments);
   },
   isActive: function() {
     return true;
