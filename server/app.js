@@ -5,7 +5,8 @@
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , MainPage = require('./routes/MainPage')
 
 var app = express();
 
@@ -34,3 +35,4 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
+new MainPage({app: app})

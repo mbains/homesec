@@ -1,4 +1,4 @@
-Observable = require "../Observable"
+Observable = require "../utils/shared/Observable"
 
 class ScopedRouter extends Observable
   

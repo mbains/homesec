@@ -1,5 +1,5 @@
 Ext.define "HomeSec.view.tablet.MainView",
-  requires: "HomeSec.view.tablet.StatusView"
+  requires: "HomeSec.view.StatusView"
   extend: "Ext.Panel"
   xtype: "mainview"
   config:
