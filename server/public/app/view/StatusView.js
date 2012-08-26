@@ -5,7 +5,7 @@ Ext.define("HomeSec.view.StatusView", {
   extend: "Ext.dataview.List",
   xtype: 'statusview',
   config: {
-    store: Ext.create('HomeSec.store.SStatus'),
+    store: 'SStatus',
     itemTpl: '<div class="myitem">{nameText} has tripped {tripValue} times </div>'
   },
   constructor: function() {
