@@ -26,10 +26,10 @@ WebSocketServer = (function(_super) {
 
   WebSocketServer.prototype.createHandler = function(klass) {
     console.log("creating Handler " + klass);
-    return this.handlers.push(new klass({
+    return new klass({
       io: this.io,
       sockets: this.io.sockets
-    }));
+    });
   };
 
   return WebSocketServer;

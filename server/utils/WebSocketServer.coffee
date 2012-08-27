@@ -15,6 +15,6 @@ class WebSocketServer extends Observable
     
   createHandler: (klass)->
     console.log "creating Handler #{klass}"
-    @handlers.push (new klass io: @io, sockets: @io.sockets)
+    new klass io: @io, sockets: @io.sockets
     
 global.exports = module.exports = WebSocketServer
