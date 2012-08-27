@@ -36,20 +36,18 @@ DetectorFeed = (function(_super) {
     last = 0;
     tripCount = 0;
     port.on('data', function(data) {
-      var id, s, sock, status, _ref, _results;
-      console.log("data: " + data);
+      var id, s, sock, status, _ref;
       s = data.toString();
-      status = s.slice(s.length - 2, s.length - 1);
-      if (status === !last && status === 1) {
+      status = parseInt(s.slice(s.length - 2, s.length - 1));
+      if (status !== last && status === 1) {
         tripCount += 1;
         _ref = _this.currentSockets;
-        _results = [];
         for (id in _ref) {
           sock = _ref[id];
-          _results.push(_this.sendNews(sock, tripCount));
+          _this.sendNews(sock, tripCount);
         }
-        return _results;
       }
+      return last = status;
     });
     timer = function() {
       return port.write('~in0D~');
