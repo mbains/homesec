@@ -37,6 +37,7 @@ DetectorFeed = (function(_super) {
     tripCount = 0;
     port.on('data', function(data) {
       var id, s, sock, status, _ref, _results;
+      console.log("data: " + data);
       s = data.toString();
       status = s.slice(s.length - 2, s.length - 1);
       if (status === !last && status === 1) {

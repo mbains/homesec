@@ -20,6 +20,7 @@ class DetectorFeed extends Observable
     tripCount = 0
     
     port.on 'data', (data)=>
+      console.log "data: " + data
       s = data.toString()
       status = s.slice s.length - 2, s.length - 1
       if status is not last and status is 1
