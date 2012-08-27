@@ -9,6 +9,7 @@
     "express": "3.0.0rc3",
     "ejs": "*",
     "stylus": "*",
-    "socket.io": "latest"
+    "socket.io": "latest",
+    "serialport": "latest"
   }
 }

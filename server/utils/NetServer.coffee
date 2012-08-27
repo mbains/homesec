@@ -1,4 +1,4 @@
-Observable = require "../shared/Observable"
+Observable = require "./shared/Observable"
 net = require "net"
 class NetServer extends Observable
   constructor:()->

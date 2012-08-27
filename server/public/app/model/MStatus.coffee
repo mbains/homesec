@@ -3,11 +3,15 @@ Ext.define "HomeSec.model.MStatus"
   config:
     fields: [
         {
-          name: "tripValue"
+          name: "sensorValue"
           type: "int"
         }
         { 
-          name: "nameText"
+          name: "sensorName"
+          type: "string"
+        }
+        { 
+          name: "sensorDescription"
           type: "string"
         }
     ]

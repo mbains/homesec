@@ -4,19 +4,12 @@ Ext.define("HomeSec.store.SStatus", {
   requires: "HomeSec.model.MStatus",
   extend: "Ext.data.Store",
   config: {
-    fields: [
-      {
-        name: "tripValue",
-        type: "int"
-      }, {
-        name: "nameText",
-        type: "string"
-      }
-    ],
+    model: "HomeSec.model.MStatus",
     data: [
       {
-        tripValue: 5,
-        nameText: "Motion Sensor"
+        sensorValue: 5,
+        sensorName: "motionsensor",
+        sensorDescription: "Motion Sensor"
       }
     ]
   }

@@ -1,6 +1,7 @@
 
 Ext.define "HomeSec.profile.Tablet",
-  requires: 'HomeSec.view.tablet.MainView'
+  requires: ['HomeSec.view.tablet.MainView',
+            'HomeSec.controller.tablet.Dispatcher']
   extend: "Ext.app.Profile"
   config:
     views:['MainView']
