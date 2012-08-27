@@ -31,7 +31,8 @@ WebSocketServer = (function(_super) {
       io: this.io,
       sockets: this.io.sockets
     });
-    return this.handlers.push(instance);
+    this.handlers.push(instance);
+    return instance;
   };
 
   return WebSocketServer;
