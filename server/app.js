@@ -7,6 +7,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , MainPage = require('./routes/MainPage')
+  , WebSocket = require('./utils/WebSocketServer')
+  , DetectorFeed = require('./utils/DetectorFeed');
 
 var app = express();
 
@@ -31,8 +33,10 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 
-http.createServer(app).listen(app.get('port'), function(){
+var server = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
 new MainPage({app: app})
+socket = new WebSocket({server: server})
+socket.createHandler(DetectorFeed);

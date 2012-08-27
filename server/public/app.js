@@ -2,7 +2,9 @@
 
 Ext.application({
   name: "HomeSec",
+  requires: "HomeSec.controller.DispatcherMain",
   profiles: ["Tablet"],
+  controllers: ["DispatcherMain"],
   launch: function() {
     return console.log("APP launch");
   }
