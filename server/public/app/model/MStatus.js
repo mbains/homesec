@@ -13,6 +13,18 @@ Ext.define("HomeSec.model.MStatus", {
       }, {
         name: "sensorDescription",
         type: "string"
+      }, {
+        name: "lastTripped",
+        type: "string",
+        convert: function(value, record) {
+          var d;
+          if (value != null) {
+            d = new Date(value);
+            return Ext.Date.format(d, 'M-d, D h:s');
+          } else {
+            return null;
+          }
+        }
       }
     ]
   }

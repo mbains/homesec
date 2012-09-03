@@ -15,6 +15,8 @@ DetectorFeed = (function(_super) {
     var _this = this;
     DetectorFeed.__super__.constructor.apply(this, arguments);
     this.currentSockets = {};
+    this.tripCount = 0;
+    this.lastTripped = Date.now();
     console.log("Creating DETECTOR FEED");
     this.sockets.on("connection", function(socket) {
       console.log("Sending news: " + socket.id);
@@ -23,28 +25,30 @@ DetectorFeed = (function(_super) {
         console.log("socket disconnected:" + socket.id);
         return delete _this.currentSockets[socket.id];
       });
-      return _this.sendNews(socket, 42);
+      socket.on("getNews", function() {
+        return _this.sendNews(socket);
+      });
+      return _this.sendNews(socket);
     });
   }
 
   DetectorFeed.prototype.startSerialPort = function() {
-    var last, port, timer, tripCount,
+    var last, port, timer,
       _this = this;
     port = new SerialPort("/dev/ttyACM0", {
       baudrate: 9600
     });
     last = 0;
-    tripCount = 0;
     port.on('data', function(data) {
       var id, s, sock, status, _ref;
       s = data.toString();
       status = parseInt(s.slice(s.length - 2, s.length - 1));
       if (status !== last && status === 1) {
-        tripCount += 1;
+        _this.tripCount += 1;
         _ref = _this.currentSockets;
         for (id in _ref) {
           sock = _ref[id];
-          _this.sendNews(sock, tripCount);
+          _this.sendNews(sock);
         }
       }
       return last = status;
@@ -55,10 +59,11 @@ DetectorFeed = (function(_super) {
     return setInterval(timer, 1000);
   };
 
-  DetectorFeed.prototype.sendNews = function(socket, value) {
+  DetectorFeed.prototype.sendNews = function(socket) {
     return socket.emit("news", {
       sensorName: "motionsensor",
-      sensorValue: value
+      sensorValue: this.tripCount,
+      lastTripped: this.lastTripped
     });
   };
 

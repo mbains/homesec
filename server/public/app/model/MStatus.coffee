@@ -14,4 +14,14 @@ Ext.define "HomeSec.model.MStatus"
           name: "sensorDescription"
           type: "string"
         }
+        {
+          name: "lastTripped",
+          type: "string",
+          convert:(value, record)->
+            if value?
+              d = new Date(value)
+              Ext.Date.format(d, 'M-d, D h:s')
+            else   
+              null
+        }
     ]

@@ -1,3 +1,4 @@
+Ext.Loader.setConfig enabled:true, disableCaching:false
 
 Ext.application
   requires: ["Ext.event.Dispatcher"]

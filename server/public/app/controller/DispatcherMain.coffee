@@ -20,4 +20,7 @@ Ext.define "HomeSec.controller.DispatcherMain",
       r = store.findRecord "sensorName", news.sensorName
       console.log "Found: " + r
       r.set "sensorValue", news.sensorValue
+      r.set "lastTripped", news.lastTripped
       console.log "Here's the news: #{news.sensorName}"
+      
+    @socket.io.emit "getNews"

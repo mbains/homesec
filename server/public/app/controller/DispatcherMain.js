@@ -17,7 +17,7 @@ Ext.define("HomeSec.controller.DispatcherMain", {
   },
   launch: function() {
     console.log(this.socket);
-    return this.socket.onSignal({
+    this.socket.onSignal({
       signal: "news",
       fn: function(news) {
         var r, store;
@@ -25,8 +25,10 @@ Ext.define("HomeSec.controller.DispatcherMain", {
         r = store.findRecord("sensorName", news.sensorName);
         console.log("Found: " + r);
         r.set("sensorValue", news.sensorValue);
+        r.set("lastTripped", news.lastTripped);
         return console.log("Here's the news: " + news.sensorName);
       }
     });
+    return this.socket.io.emit("getNews");
   }
 });
