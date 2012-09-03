@@ -45,6 +45,7 @@ DetectorFeed = (function(_super) {
       status = parseInt(s.slice(s.length - 2, s.length - 1));
       if (status !== last && status === 1) {
         _this.tripCount += 1;
+        _this.lastTripped = Date.now();
         _ref = _this.currentSockets;
         for (id in _ref) {
           sock = _ref[id];

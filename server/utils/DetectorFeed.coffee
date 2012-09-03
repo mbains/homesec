@@ -30,6 +30,7 @@ class DetectorFeed extends Observable
       status = parseInt (s.slice s.length - 2, s.length - 1)
       if status isnt last and status is 1
         @tripCount+=1
+        @lastTripped = Date.now()
         @sendNews sock for id, sock of @currentSockets
       last = status
     timer = ()->
