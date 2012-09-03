@@ -20,7 +20,7 @@ Ext.define("HomeSec.model.MStatus", {
           var d;
           if (value != null) {
             d = new Date(value);
-            return Ext.Date.format(d, 'M-d, D h:m');
+            return Ext.Date.format(d, 'M-d, D h:i A');
           } else {
             return null;
           }

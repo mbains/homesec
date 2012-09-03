@@ -20,7 +20,7 @@ Ext.define "HomeSec.model.MStatus"
           convert:(value, record)->
             if value?
               d = new Date(value)
-              Ext.Date.format(d, 'M-d, D h:m')
+              Ext.Date.format(d, 'M-d, D h:i A')
             else   
               null
         }
