@@ -166,7 +166,7 @@ class XBEEProtocol(Protocol, object):
 
         def sendMore():
             #relay_binary = bin( (16-self.count) % 16)[2:].zfill(4)
-            relay_binary = '11111111'
+            relay_binary = ';0000'
             print "message = %s Log = " % (relay_binary), ["on" if x == '0'  else "off" for x in relay_binary]
             pkt = XBeeOuter()/ZigbeeTxPacket(frame_id=self.count, long_source=0x13a20040625962)/Raw(relay_binary)
             self.send(pkt.build())
@@ -179,13 +179,11 @@ class XBEEProtocol(Protocol, object):
         #reactor.callLater(3, sendMore)
 
     def lightsOn(self, request):
-        #send 2*buffer size (0000) due to firmware bug
-        self.zigbeeTx('0'*8, 0x13a20040625962)
+        self.zigbeeTx(';'+'0'*4, 0x13a20040625962)
         return 'Lights On'
 
     def lightsOff(self, request):
-        #send 2*buffer size (0000) due to firmware bug
-        self.zigbeeTx('1'*8, 0x13a20040625962)
+        self.zigbeeTx(';' + '1'*4, 0x13a20040625962)
         return 'Lights off'
 
     def zigbeeTx(self, data, long_src):
