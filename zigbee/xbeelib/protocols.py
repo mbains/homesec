@@ -166,7 +166,7 @@ class XBEEProtocol(Protocol, object):
 
         def sendMore():
             #relay_binary = bin( (16-self.count) % 16)[2:].zfill(4)
-            relay_binary = ';0000'
+            relay_binary = ';1111'
             print "message = %s Log = " % (relay_binary), ["on" if x == '0'  else "off" for x in relay_binary]
             pkt = XBeeOuter()/ZigbeeTxPacket(frame_id=self.count, long_source=0x13a20040625962)/Raw(relay_binary)
             self.send(pkt.build())
