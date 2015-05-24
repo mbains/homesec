@@ -15,6 +15,17 @@ import sys
 from twisted.python import log
 from array import array
 from scapy.all import Packet, Raw
+from emailer import Emailer
+
+
+FRAME_TYPES = {
+    'XBeeIOFrame':          0x92,
+    'ATCommand':            0x08,
+    'ATCommandResponse':    0x88,
+    'RemoteATCommand':      0x17,
+    'ZigbeeRxPacket':       0x90,
+    'ZigbeeTxPacket':       0x10
+}
 
 def checksum8(load):
     sum = 0
@@ -131,12 +142,14 @@ class RemoteATCommandResponse(Packet):
                            ])
 
 
-bind_layers(XBeeOuter, XBeeIOFrame,         {'frame_type': 0x92})
-bind_layers(XBeeOuter, ATCommand,           {'frame_type': 0x08})
-bind_layers(XBeeOuter, ATCommandResponse,   {'frame_type': 0x88})
-bind_layers(XBeeOuter, RemoteATCommand,     {'frame_type': 0x17})
-bind_layers(XBeeOuter, ZigbeeRxPacket,      {'frame_type': 0x90})
-bind_layers(XBeeOuter, ZigbeeTxPacket,      {'frame_type': 0x10})
+
+
+bind_layers(XBeeOuter, XBeeIOFrame,         {'frame_type': FRAME_TYPES['XBeeIOFrame']})
+bind_layers(XBeeOuter, ATCommand,           {'frame_type': FRAME_TYPES['ATCommand']})
+bind_layers(XBeeOuter, ATCommandResponse,   {'frame_type': FRAME_TYPES['ATCommandResponse']})
+bind_layers(XBeeOuter, RemoteATCommand,     {'frame_type': FRAME_TYPES['RemoteATCommand']})
+bind_layers(XBeeOuter, ZigbeeRxPacket,      {'frame_type': FRAME_TYPES['ZigbeeRxPacket']})
+bind_layers(XBeeOuter, ZigbeeTxPacket,      {'frame_type': FRAME_TYPES['ZigbeeTxPacket']})
 
 class XBEEProtocol(Protocol, object):
     """ Twisted Protocol class for handling telnet data as client"""
@@ -244,26 +257,6 @@ class XBEEProtocol(Protocol, object):
         return self.transport.write(data)
 
 
-from time import time
-import smtplib
-class Emailer(object):
-    def __init__(self):
-        self.now = None
-        self.tolist = ("manjinder.bains@gmail.com", "bains.beant@gmail.com")
-    def sendMail(self, now, message):
-        if self.now is None or (time() - self.now > 300):
-            mail = smtplib.SMTP("localhost")
-            self.now = time()
-            try:
-                msg = ("Subject: Motion at front door\n"
-                    "\n  At %s\n"
-                    "\n  Message/Count: %s") % (now, message)
-                mail.sendmail("1169ashford@lincoln.com", self.tolist, msg)
-                print "Email sent:\n", msg
-            except Exception, e:
-                print "MAIL ERROR", Exception, e
-            mail.close()
-
 
 
 if __name__ == "__main__":
@@ -272,27 +265,44 @@ if __name__ == "__main__":
     """ protocols.py, print analog message """
     from time import strftime
     from datetime import datetime
-    emailer = Emailer()
+    from pkt_processor import Pkt_Processor
+
+
+
+    if sys.argv[-1] == '2':
+        emailer = Emailer()
+    else:
+        emailer = None
+
+    sensors = {}
+    sensors[0x13A20040625934] = Pkt_Processor("garage", emailer)
+    sensors[0x13a20040625962] = Pkt_Processor("outside", emailer)
     def m(proto, data):
         try:
             frame = XBeeOuter(data)
-            if sys.argv[-1] == '2':
-                if hasattr(frame, 'load'):
-                    now = datetime.now().strftime("%I:%M:%S %p")
-                    print now, frame.load
-                    emailer.sendMail(now, frame.load)
-            elif sys.argv[-1] == '1':
+            if sys.argv[-1] == '1':
                 frame.show()
+            
+            the_long_source = getattr(frame, 'long_source', None)
+            if the_long_source is not None:
+                thesensor = sensors.get(frame.long_source)
+
+            if the_long_source is not None and thesensor is not None:
+                thesensor.handle_message(frame)
             else:
-                lumiPercent = ((1024.-frame.analog_sample)/1024)*100
-                print '%s: %s' % (strftime('%X'), lumiPercent)
+                for sensor in sensors:
+                    sensors[sensor].handle_error(frame)
+
+#            else:
+#                lumiPercent = ((1024.-frame.analog_sample)/1024)*100
+#                print '%s: %s' % (strftime('%X'), lumiPercent)
         except Exception, e:
-            print e
+            print Exception, e
             from array import array
             a = array('B')
             a.fromstring(data)
             
-            print "Exception: data = %r", [hex(x) for x in a]
+            print "Exception: %s" % Exception, "data = ", [hex(x) for x in a]
             
 
     serialProtocol = XBEEProtocol(name="%s" % sys.argv[1], incomingMethod=m)
