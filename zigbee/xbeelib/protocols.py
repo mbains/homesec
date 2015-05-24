@@ -24,7 +24,8 @@ FRAME_TYPES = {
     'ATCommandResponse':    0x88,
     'RemoteATCommand':      0x17,
     'ZigbeeRxPacket':       0x90,
-    'ZigbeeTxPacket':       0x10
+    'ZigbeeTxPacket':       0x10,
+    'ZigbeeTransmitStatus': 0x8B
 }
 
 def checksum8(load):
@@ -142,14 +143,51 @@ class RemoteATCommandResponse(Packet):
                            ])
 
 
+class ZigbeeTransmitStatus(Packet):
+    name = "ZigbeeTransmitStatus"
+    fields_desc = flatten(  [ByteField("frame_id", 0)],
+                            [
+                                XShortField("short_dest", 0xFFFD),
+                                ByteField("txmit_retry_cnt", 0),
+                                ByteEnumField("delivery_status", 0, 
+                                    {
+                                        0x00: 'Success',
+                                        0x01: 'MAC ACK Failure',
+                                        0x02: 'CCA Failure',
+                                        0x15: 'Invalid Destination',
+                                        0x21: 'Network ACK Failure',
+                                        0x22: 'Not Joined to Network',
+                                        0x23: 'Self-addressed',
+                                        0x24: 'Address Not Found',
+                                        0x25: 'Route Not Found',
+                                        0x26: 'Broadcast source failed to hear a neighbor relay the message',
+                                        0x2B: 'Invalid binding table index',
+                                        0x2C: 'Resource error lack fo free buffers, timers and so forth',
+                                        0x2D: 'Attempted broadcast with APS transmission',
+                                        0x2E: 'Attempted unicast with APS transmission, but EE=0',
+                                        0x32: 'Resource error lack fo free buffers, timers and so forth',
+                                        0x74: 'Data payload too large'
+                                    }),
+                                ByteEnumField("discovery_status", 0, 
+                                    {
+                                        0x00: "No Discovery Overhead",
+                                        0x01: "Address Discovery",
+                                        0x02: "Route Discovery",
+                                        0x03: "Address and Route",
+                                        0x40: "Extended Timeout Discovery"
+                                    })
+                            ]
+        )
 
 
-bind_layers(XBeeOuter, XBeeIOFrame,         {'frame_type': FRAME_TYPES['XBeeIOFrame']})
-bind_layers(XBeeOuter, ATCommand,           {'frame_type': FRAME_TYPES['ATCommand']})
-bind_layers(XBeeOuter, ATCommandResponse,   {'frame_type': FRAME_TYPES['ATCommandResponse']})
-bind_layers(XBeeOuter, RemoteATCommand,     {'frame_type': FRAME_TYPES['RemoteATCommand']})
-bind_layers(XBeeOuter, ZigbeeRxPacket,      {'frame_type': FRAME_TYPES['ZigbeeRxPacket']})
-bind_layers(XBeeOuter, ZigbeeTxPacket,      {'frame_type': FRAME_TYPES['ZigbeeTxPacket']})
+
+bind_layers(XBeeOuter, XBeeIOFrame,          {'frame_type': FRAME_TYPES['XBeeIOFrame']})
+bind_layers(XBeeOuter, ATCommand,            {'frame_type': FRAME_TYPES['ATCommand']})
+bind_layers(XBeeOuter, ATCommandResponse,    {'frame_type': FRAME_TYPES['ATCommandResponse']})
+bind_layers(XBeeOuter, RemoteATCommand,      {'frame_type': FRAME_TYPES['RemoteATCommand']})
+bind_layers(XBeeOuter, ZigbeeRxPacket,       {'frame_type': FRAME_TYPES['ZigbeeRxPacket']})
+bind_layers(XBeeOuter, ZigbeeTxPacket,       {'frame_type': FRAME_TYPES['ZigbeeTxPacket']})
+bind_layers(XBeeOuter, ZigbeeTransmitStatus, {'frame_type': FRAME_TYPES['ZigbeeTransmitStatus']})
 
 class XBEEProtocol(Protocol, object):
     """ Twisted Protocol class for handling telnet data as client"""

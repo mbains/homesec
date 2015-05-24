@@ -7,7 +7,7 @@ class Emailer(object):
     def sendMail(self, timestamp, subject, message, critical = False):
         if critical:
             self.now = None
-        if self.now is None or (time() - self.now > 300):
+        if self.now is None or (time() - self.now > 200):
             mail = smtplib.SMTP("localhost")
             self.now = time()
             try:

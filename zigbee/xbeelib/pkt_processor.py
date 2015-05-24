@@ -18,13 +18,21 @@ class Pkt_Processor(object):
 
 	def handle_message(self, frame):
 		self.reset_age()
+		if hasattr(frame, 'short_source'):
+			self._short_source = frame.short_source;
+
 		if frame.frame_type == FRAME_TYPES['ZigbeeRxPacket']:
 			self.handle_motion(frame)
 
 
-	def handle_error(self, frame):
-		print self.name + " i don't know how to handle this: ", getattr(frame, 'frame_type', None)
 
+	def handle_error(self, frame):
+		if frame.frame_type == FRAME_TYPES['ZigbeeTransmitStatus']:
+			if frame.short_dest == self._short_source:
+				self.handle_transmit_status(frame)
+
+	def handle_transmit_status(self, frame):
+		self.sendMessage("tx message sent", "%s" % frame.__dict__, True)
 
 	def handle_motion(self, pkt):
 		print self.name + " got motion"
